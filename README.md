@@ -4,7 +4,7 @@ Este projeto é um exemplo de aplicação JavaFX que segue o padrão MVC (Model-
 
 Está sendo desenvolvido durante a disciplina [Programação Orientada a Objetos](https://moodle3.ifsc.edu.br/course/view.php?id=6973) do Curso Técnico de Desenvolvimento de Sistemas - IFSC
 
-<img src="https://opengraph.githubassets.com/c3fa21842d8ae87253e386623b34cca5fcbce905d96f455976c20ec2181ac2b6/andreriffen/lavacao" style="max-width: 100%; max-height: 100%; width: auto; height: auto;" alt="Descrição da Imagem">
+<img src="https://opengraph.githubassets.com/c3fa21842d8ae87253e386623b34cca5fcbce905d96f455976c20ec2181ac2b6/andreriffen/lavacao" width="500" height="500" alt="Descrição da Imagem">
 
 <a href="#requisitos"><img src="https://img.shields.io/badge/Java%20JDK%208%2B-007396?style=flat-square&logo=java&logoColor=white"/></a>
 <a href="#requisitos"><img src="https://img.shields.io/badge/JavaFX-007396?style=flat-square&logo=java&logoColor=white"/></a>
