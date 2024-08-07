@@ -5,7 +5,7 @@
         🟩 🟩🟩
         🟩 🟩
 
-![img1](https://www.ifsc.edu.br/documents/23504/23634/Foto_C%C3%A2mpusFlorian%C3%B3polis_2015.jpg/7d75432d-a54a-ea9d-b26c-163f224420f2?t=1501702837732)
+<img src="https://www.ifsc.edu.br/documents/23504/23634/Foto_C%C3%A2mpusFlorian%C3%B3polis_2015.jpg/7d75432d-a54a-ea9d-b26c-163f224420f2?t=1501702837732" width="500" height="250" alt="Descrição da Imagem"> 
 
 Este projeto é um exemplo de aplicação JavaFX que segue o padrão MVC (Model-View-Controller) e DAO (Data Access Object) para implementaçõe de CRUD (Create, Read, Update, Delete, operações de manipulação básicos de elementos e atributos).
 
