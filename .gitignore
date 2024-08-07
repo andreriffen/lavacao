@@ -1,0 +1,15 @@
+/build/
+/dist/
+/out/
+
+# Diretórios e arquivos temporários
+*.tmp
+*.log
+*.swp
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Diretórios do Maven (se usado)
+target/
