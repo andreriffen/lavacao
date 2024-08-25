@@ -31,7 +31,7 @@ Está sendo desenvolvido durante a disciplina [Programação Orientada a Objetos
 
 - 2024 ©️ **Andre Riffen** - [Perfil GitHub](https://github.com/andreriffen)
 
-- [https://github.com/mpisching/POO-TDS-2024-01-MA/tree/main/PrjSistemaDeVendas_DAO_MVC](https://github.com/mpisching/POO-TDS-2024-01-MA/tree/main/PrjSistemaDeVendas_DAO_MVC)
+- [https://github.com/mpisching/POO-TDS-2024-01-MA/tree/main/PrjSistemaDeVendas_DAO_MVC/MavenProjects/lavacao-javafx-master/lavacao-javafx-master](https://github.com/mpisching/POO-TDS-2024-01-MA/tree/main/PrjSistemaDeVendas_DAO_MVC/MavenProjects/lavacao-javafx-master/lavacao-javafx-master)
 
 ### 📜 Licença
 
