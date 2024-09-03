@@ -1,23 +1,40 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2024 Riffen.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package br.edu.ifsc.fln.model.domain;
 
 /**
- * Representa um serviço disponível na Ordem de Serviço.
- * Cada serviço possui uma descrição, valor e pontos de fidelidade.
  *
- * @author andreriffen
- *
+ * @author Riffen
  */
 public class Servico {
-    private int id;             // Identificador único do serviço
-    private String descricao;   // Descrição do serviço
-    private double valor;       // Valor do serviço
-    private final int pontos;         // Pontos de fidelidade do serviço
-    private ECategoria categoria; // Categoria do veículo
-
-    // Construtor, getters e setters
+    private int id;
+    private String descricao;
+    private double valor;
+    private int pontos;
+    private ECategoria categoria;
 
     public Servico() {
-        this.pontos = 10; // Pontos fixos para todos os serviços
     }
 
     public Servico(int id, String descricao, double valor, ECategoria categoria) {
@@ -25,10 +42,8 @@ public class Servico {
         this.descricao = descricao;
         this.valor = valor;
         this.categoria = categoria;
-        this.pontos = 10; // Pontos fixos para todos os serviços
-        definirValor();
-    }
-
+    } 
+    
     public int getId() {
         return id;
     }
@@ -45,12 +60,6 @@ public class Servico {
         this.descricao = descricao;
     }
 
-    public int getPontos() {
-        return pontos;
-    }
-
-
-
     public double getValor() {
         return valor;
     }
@@ -59,37 +68,27 @@ public class Servico {
         this.valor = valor;
     }
 
-    public Categoria getCategoria() {
+    public int getPontos() {
+        return pontos;
+    }
+    
+     
+
+    public void setPontos(int pontos) {
+        this.pontos = pontos;
+    }
+
+    public ECategoria getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(Categoria categoria) {
-
-        definirValor();
+    public void setCategoria(ECategoria categoria) {
         this.categoria = categoria;
     }
-
-    // Metodo para definir o valor baseado na categoria
-    private void definirValor() {
-        switch (categoria) {
-            case PADRAO:
-                this.valor = 75.0;
-                break;
-            case PEQUENO:
-                this.valor = 50.0;
-                break;
-            case MEDIO:
-                this.valor = 100.0;
-                break;
-            case GRANDE:
-                this.valor = 125.0;
-                break;
-            case MOTO:
-                this.valor = 80.0;
-                break;
-            case CAMINHAO:
-                this.valor = 150.0;
-                break;
-        }
+    
+    @Override
+    public String toString() {
+        return this.descricao;
     }
+    
 }

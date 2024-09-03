@@ -23,12 +23,15 @@
  */
 package br.edu.ifsc.fln.model.dao;
 
-import br.edu.ifsc.fln.model.domain.Cor;
+import br.edu.ifsc.fln.model.domain.ETipoCombustivel;
+import br.edu.ifsc.fln.model.domain.Marca;
+import br.edu.ifsc.fln.model.domain.Motor;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,7 +40,7 @@ import java.util.logging.Logger;
  *
  * @author Riffen
  */
-public class CorDAO {
+public class MotorDAO {
 
     private Connection connection;
 
@@ -49,78 +52,66 @@ public class CorDAO {
         this.connection = connection;
     }
 
-    public boolean inserir(Cor cor) {
-        String sql = "INSERT INTO cor(nome) VALUES(?)";
+    public boolean inserir(Motor motor) {
+        
+       String sql = "INSERT INTO motor(id_modelo) VALUES(?)";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, cor.getNome());
+            stmt.setInt(1, motor.getModelo().getId());
             stmt.execute();
+            alterar(motor);
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(CorDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MotorDAO.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
 
-    public boolean alterar(Cor cor) {
-        String sql = "UPDATE cor SET nome=? WHERE id=?";
+    public boolean alterar(Motor motor) {
+        String sql = "UPDATE motor SET potencia=?, tipoCombustivel=? WHERE id_modelo=?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, cor.getNome());
-            stmt.setInt(2, cor.getId());
+            stmt.setInt(1, motor.getPotencia());
+            stmt.setString(2, motor.getTipoCombustivel().name());
+            stmt.setInt(3, motor.getModelo().getId());
             stmt.execute();
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(CorDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MotorDAO.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
 
-    public boolean remover(Cor cor) {
-        String sql = "DELETE FROM cor WHERE id=?";
+    public boolean remover(Motor motor) {
+        String sql = "DELETE FROM motor WHERE id_modelo=?";
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, cor.getId());
+            stmt.setInt(1, motor.getModelo().getId());
             stmt.execute();
             return true;
         } catch (SQLException ex) {
-            Logger.getLogger(CorDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MotorDAO.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
-
-    public List<Cor> listar() {
-        String sql = "SELECT * FROM cor";
-        List<Cor> retorno = new ArrayList<>();
+    
+    public List<Motor> listar() {
+        String sql = "SELECT * FROM motor";
+        List<Motor> retorno = new ArrayList<>();
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             ResultSet resultado = stmt.executeQuery();
             while (resultado.next()) {
-                Cor cor = new Cor();
-                cor.setId(resultado.getInt("id"));
-                cor.setNome(resultado.getString("nome"));
-                retorno.add(cor);
+                Motor motor = new Motor();
+                motor.getModelo().setId(resultado.getInt("id_modelo"));
+                motor.setPotencia(resultado.getInt("potencia"));
+                motor.setTipoCombustivel(Enum.valueOf(ETipoCombustivel.class, resultado.getString("tipoCombustivel")));
+                retorno.add(motor);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(CorDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MarcaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return retorno;
     }
-
-    public Cor buscar(Cor cor) {
-        String sql = "SELECT * FROM cor WHERE id=?";
-        Cor retorno = new Cor();
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, cor.getId());
-            ResultSet resultado = stmt.executeQuery();
-            if (resultado.next()) {
-                cor.setNome(resultado.getString("nome"));
-                retorno = cor;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(CorDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return retorno;
-    }
+    
 }

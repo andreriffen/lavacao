@@ -24,12 +24,11 @@
 package br.edu.ifsc.fln.controller;
 
 import br.edu.ifsc.fln.model.dao.ModeloDAO;
-import br.edu.ifsc.fln.model.dao.MotorDAO;
+import br.edu.ifsc.fln.model.dao.VeiculoDAO;
 import br.edu.ifsc.fln.model.database.Database;
 import br.edu.ifsc.fln.model.database.DatabaseFactory;
-import br.edu.ifsc.fln.model.domain.ETipoCombustivel;
 import br.edu.ifsc.fln.model.domain.Modelo;
-import br.edu.ifsc.fln.model.domain.Motor;
+import br.edu.ifsc.fln.model.domain.Veiculo;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -58,31 +57,33 @@ import javafx.stage.Stage;
  *
  * @author Riffen
  */
-public class FXMLAnchorPaneCadastroModeloController implements Initializable {
+public class FXMLAnchorPaneCadastroVeiculoController implements Initializable {
 
     @FXML
-    private TableView<Modelo> tableView;
+    private TableView<Veiculo> tableView;
 
     @FXML
-    private TableColumn<Modelo, String> tableColumnNome;
+    private TableColumn<Veiculo, String> tableColumnPlaca;
 
-    @FXML
-    private Label lbModeloId;
-
-    @FXML
-    private Label lbModeloDescricao;
-
-    @FXML
-    private Label lbModeloMarca;
     
     @FXML
-    private Label lbModeloCategoria;
+    private Label lbVeiculoId;
     
     @FXML
-    private Label lbModeloMotorPotencia;
+    private Label lbVeiculoPlaca;
     
     @FXML
-    private Label lbModeloMotorCombustivel;
+    private Label lbVeiculoObservacoes;
+    
+    @FXML
+    private Label lbVeiculoModelo;
+    
+    @FXML
+    private Label lbVeiculoCor;
+    
+    @FXML
+    private Label lbVeiculoCliente;
+
 
     @FXML
     private Button btInserir;
@@ -93,127 +94,118 @@ public class FXMLAnchorPaneCadastroModeloController implements Initializable {
     @FXML
     private Button btRemover;
 
-    private List<Modelo> listaModelos;
-    private ObservableList<Modelo> observableListModelos;
+    private List<Veiculo> listaVeiculos;
+    private ObservableList<Veiculo> observableListVeiculos;
 
     //acesso ao banco de dados
     private final Database database = DatabaseFactory.getDatabase("mysql");
     private final Connection connection = database.conectar();
-    private final ModeloDAO modeloDAO = new ModeloDAO();
-    private final MotorDAO motorDAO = new MotorDAO();
+    private final VeiculoDAO veiculoDAO = new VeiculoDAO();
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        modeloDAO.setConnection(connection);
-        motorDAO.setConnection(connection);
+        veiculoDAO.setConnection(connection);
 
         carregarTableView();
 
         tableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> selecionarItemTableView(newValue));
+
     }
 
     public void carregarTableView() {
-        tableColumnNome.setCellValueFactory(new PropertyValueFactory<>("descricao"));
+        tableColumnPlaca.setCellValueFactory(new PropertyValueFactory<>("placa"));
         
-        listaModelos = modeloDAO.listar();
+        listaVeiculos = veiculoDAO.listar();
         
-        observableListModelos = FXCollections.observableArrayList(listaModelos);
-        tableView.setItems(observableListModelos);
+        observableListVeiculos = FXCollections.observableArrayList(listaVeiculos);
+        tableView.setItems(observableListVeiculos);
     }
     
-    public void selecionarItemTableView(Modelo modelo) {
-        if (modelo != null) {
-            lbModeloId.setText(Integer.toString(modelo.getId()));
-            lbModeloDescricao.setText(modelo.getDescricao());
-            lbModeloMarca.setText(modelo.getMarca().getNome());
-            lbModeloCategoria.setText(modelo.getCategoria().name());
-            lbModeloMotorPotencia.setText(Integer.toString(modelo.getMotor().getPotencia()));
-            lbModeloMotorCombustivel.setText(modelo.getMotor().getTipoCombustivel().name());
+    public void selecionarItemTableView(Veiculo veiculo) {
+        if (veiculo != null) {
+            lbVeiculoId.setText(Integer.toString(veiculo.getId()));
+            lbVeiculoPlaca.setText(veiculo.getPlaca());
+            lbVeiculoObservacoes.setText(veiculo.getObservacoes());
+            lbVeiculoModelo.setText(veiculo.getModelo().getDescricao());
+            lbVeiculoCor.setText(veiculo.getCor().getNome());
+            lbVeiculoCliente.setText(veiculo.getCliente().getNome());
         } else {
-            lbModeloId.setText("");
-            lbModeloDescricao.setText("");
-            lbModeloMarca.setText("");
-            lbModeloCategoria.setText("");
-            lbModeloMotorPotencia.setText("");
-            lbModeloMotorCombustivel.setText("");
+            lbVeiculoId.setText("");
+            lbVeiculoPlaca.setText("");
+            lbVeiculoObservacoes.setText("");
+            lbVeiculoModelo.setText("");
+            lbVeiculoCor.setText("");
+            lbVeiculoCliente.setText("");
         }
     }
     
 
     @FXML
     public void handleBtInserir() throws IOException {
-        Modelo modelo = new Modelo();
-        Motor motor = new Motor();
-        modelo.setMotor(motor);
-        motor.setModelo(modelo);
-        boolean buttonConfirmarClicked = showFXMLAnchorPaneCadastrosModelosDialog(modelo);
+        Veiculo veiculo = new Veiculo();
+        boolean buttonConfirmarClicked = showFXMLAnchorPaneCadastrosVeiculosDialog(veiculo);
         if (buttonConfirmarClicked) {
-            modeloDAO.inserir(modelo);
-            modelo.getMotor().getModelo().setId(modeloDAO.getModeloAutoID(modelo));
-            motorDAO.inserir(modelo.getMotor());
+            veiculoDAO.inserir(veiculo);
             carregarTableView();
         }
     }
     
     @FXML
     public void handleBtAlterar() throws IOException {
-        Modelo modelo = tableView.getSelectionModel().getSelectedItem();
-        if (modelo != null) {
-            modelo.getMotor().setModelo(modelo);
-            boolean buttonConfirmarClicked = showFXMLAnchorPaneCadastrosModelosDialog(modelo);
+        Veiculo veiculo = tableView.getSelectionModel().getSelectedItem();
+        if (veiculo != null) {
+            boolean buttonConfirmarClicked = showFXMLAnchorPaneCadastrosVeiculosDialog(veiculo);
             if (buttonConfirmarClicked) {
-                modeloDAO.alterar(modelo);
-                motorDAO.alterar(modelo.getMotor());
+                veiculoDAO.alterar(veiculo);
                 carregarTableView();
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Por favor, escolha um modelo na Tabela.");
+            alert.setContentText("Por favor, escolha um veículo na Tabela.");
             alert.show();
         }
     }
     
     @FXML
     public void handleBtRemover() throws IOException {
-        Modelo modelo = tableView.getSelectionModel().getSelectedItem();
-        if (modelo != null) {
+        Veiculo veiculo = tableView.getSelectionModel().getSelectedItem();
+        if (veiculo != null) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setHeaderText("Excluir Modelo");
-            alert.setContentText("Deseja realmente excluir esse modelo ?");
+            alert.setHeaderText("Excluir Veí­culo");
+            alert.setContentText("Deseja realmente excluir esse veí­culo ?");
             Optional<ButtonType> result = alert.showAndWait();
             if(result.get() == ButtonType.OK)
             {
-                modeloDAO.remover(modelo);
-                motorDAO.remover(modelo.getMotor());
+                veiculoDAO.remover(veiculo);
                 carregarTableView();
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Por favor, escolha um modelo na Tabela.");
+            alert.setContentText("Por favor, escolha um Veículo na Tabela.");
             alert.show();
         }
     }
     
-    public boolean showFXMLAnchorPaneCadastrosModelosDialog(Modelo modelo) throws IOException {
+    public boolean showFXMLAnchorPaneCadastrosVeiculosDialog(Veiculo veiculo) throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(FXMLAnchorPaneCadastroModeloDialogController.class.getResource( 
-            "/view/FXMLAnchorPaneCadastroModeloDialog.fxml"));
+        loader.setLocation(FXMLAnchorPaneCadastroVeiculoDialogController.class.getResource( 
+            "/view/FXMLAnchorPaneCadastroVeiculoDialog.fxml"));
         AnchorPane page = (AnchorPane)loader.load();
         
-        //criando um estágio de diálogo  (Stage Dialog)
+        //criando um estÃ¡gio de diÃ¡logo  (Stage Dialog)
         Stage dialogStage = new Stage();
-        dialogStage.setTitle("Cadastro de modelos");
+        dialogStage.setTitle("Cadastro de Veículos");
         Scene scene = new Scene(page);
         dialogStage.setScene(scene);
         
         //Setando o produto ao controller
-        FXMLAnchorPaneCadastroModeloDialogController controller = loader.getController();
+        FXMLAnchorPaneCadastroVeiculoDialogController controller = loader.getController();
         controller.setDialogStage(dialogStage);
-        controller.setModelo(modelo);
+        controller.setVeiculo(veiculo);
         
         dialogStage.showAndWait();
         

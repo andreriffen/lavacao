@@ -1,60 +1,62 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2024 Riffen.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package br.edu.ifsc.fln.model.domain;
 
 /**
- * Representa um cliente no sistema.
- *  
- * Refatorado por andreriffen
- * 
- * @author mpisch
+ *
+ * @author Riffen
  */
 public class Marca {
-
     private int id;
     private String nome;
 
-    /**
-     * Obtém o identificador da marca.
-     * 
-     * @return O identificador da marca.
-     */
+    public Marca() {
+    }
+
+    public Marca(String nome) {
+        this.nome = nome;
+    }
+    
     public int getId() {
         return id;
     }
 
-    /**
-     * Define o identificador da marca.
-     * 
-     * @param id O identificador a ser definido.
-     */
     public void setId(int id) {
         this.id = id;
     }
 
-    /**
-     * Obtém o nome da marca.
-     * 
-     * @return O nome da marca.
-     */
     public String getNome() {
         return nome;
     }
 
-    /**
-     * Define o nome da marca.
-     * 
-     * @param nome O nome a ser definido.
-     */
     public void setNome(String nome) {
         this.nome = nome;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Marca{");
-        sb.append("id=").append(id);
-        sb.append(", nome=").append(nome);
-        sb.append('}');
-        return sb.toString();
+        return nome;
     }
+    
 }

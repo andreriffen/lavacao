@@ -23,15 +23,17 @@
  */
 package br.edu.ifsc.fln.controller;
 
+import br.edu.ifsc.fln.model.dao.ClienteDAO;
+import br.edu.ifsc.fln.model.dao.CorDAO;
 import br.edu.ifsc.fln.model.dao.MarcaDAO;
 import br.edu.ifsc.fln.model.dao.ModeloDAO;
-import br.edu.ifsc.fln.model.dao.MotorDAO;
 import br.edu.ifsc.fln.model.database.Database;
 import br.edu.ifsc.fln.model.database.DatabaseFactory;
-import br.edu.ifsc.fln.model.domain.ECategoria;
-import br.edu.ifsc.fln.model.domain.ETipoCombustivel;
+import br.edu.ifsc.fln.model.domain.Cliente;
+import br.edu.ifsc.fln.model.domain.Cor;
 import br.edu.ifsc.fln.model.domain.Marca;
 import br.edu.ifsc.fln.model.domain.Modelo;
+import br.edu.ifsc.fln.model.domain.Veiculo;
 import java.net.URL;
 import java.sql.Connection;
 import java.util.List;
@@ -43,8 +45,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -53,24 +53,22 @@ import javafx.stage.Stage;
  *
  * @author Riffen
  */
-public class FXMLAnchorPaneCadastroModeloDialogController implements Initializable {
+public class FXMLAnchorPaneCadastroVeiculoDialogController implements Initializable {
 
     @FXML
-    private TextField tfDescricao;
+    private TextField tfPlaca;
     
     @FXML
-    private ComboBox<ECategoria> cbCategoria;
+    private TextField tfObservacoes;
     
     @FXML
-    private ComboBox<Marca> cbMarca;
+    private ComboBox<Modelo> cbModelo;
     
     @FXML
-    private Spinner<Integer> spnPotencia;
-    
-    int potencia;
+    private ComboBox<Cor> cbCor;
     
     @FXML
-    private ComboBox<ETipoCombustivel> cbCombustivel;
+    private ComboBox<Cliente> cbCliente;
 
     @FXML
     private Button btConfirmar;
@@ -78,66 +76,88 @@ public class FXMLAnchorPaneCadastroModeloDialogController implements Initializab
     @FXML
     private Button btCancelar;
     
-    //atributos para manipulação de banco de dados
+//    private List<Categoria> listaCategorias;
+//    private ObservableList<Categoria> observableListCategorias;
+        
+    //atributos para manipulaÃ§Ã£o de banco de dados
     private final Database database = DatabaseFactory.getDatabase("mysql");
     private final Connection connection = database.conectar();
-    private final MarcaDAO marcaDAO = new MarcaDAO();
     private final ModeloDAO modeloDAO = new ModeloDAO();
-    private final MotorDAO motorDAO = new MotorDAO();    
+    private final CorDAO corDAO = new CorDAO();
+    private final ClienteDAO clienteDAO = new ClienteDAO();
     
     private Stage dialogStage;
     private boolean buttonConfirmarClicked = false;
-    private Modelo modelo;  
+    private Veiculo veiculo; 
     
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        marcaDAO.setConnection(connection);
         modeloDAO.setConnection(connection);
-        motorDAO.setConnection(connection);
+        corDAO.setConnection(connection);
+        clienteDAO.setConnection(connection);
         
-        SpinnerValueFactory<Integer> spnFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0,1000);
+        carregarComboBoxModelos();
+        carregarComboBoxCores();
+        carregarComboBoxClientes();
         
-        spnFactory.setValue(0);
-        
-        spnPotencia.setValueFactory(spnFactory);
-        
-        carregarComboBoxMarcas();
-        carregarComboBoxCategorias();
-        carregarComboBoxCombustivel();
         setFocusLostHandle();
     } 
     
     private void setFocusLostHandle() {
-        tfDescricao.focusedProperty().addListener((ov, oldV, newV) -> {
+        tfPlaca.focusedProperty().addListener((ov, oldV, newV) -> {
         if (!newV) { // focus lost
-                if (tfDescricao.getText() == null || tfDescricao.getText().isEmpty()) {
+                if (tfPlaca.getText() == null || tfPlaca.getText().isEmpty()) {
                     //System.out.println("teste focus lost");
-                    tfDescricao.requestFocus();
+                    tfPlaca.requestFocus();
                 }
             }
         });
     }
     
-    private List<Marca> listaMarcas;
-    private ObservableList<Marca> observableListMarcas; 
+//This works fine too:    
+//root.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+//    focusState(newValue);
+//});
+//
+//private void focusState(boolean value) {
+//    if (value) {
+//        System.out.println("Focus Gained");
+//    }
+//    else {
+//        System.out.println("Focus Lost");
+//    }
+//} 
     
-    public void carregarComboBoxMarcas() {
-        listaMarcas = marcaDAO.listar();
-        observableListMarcas = 
-                FXCollections.observableArrayList(listaMarcas);
-        cbMarca.setItems(observableListMarcas);
-    }
-
-
-    public void carregarComboBoxCategorias() {
-        cbCategoria.setItems(FXCollections.observableArrayList(ECategoria.values()));  
-    }
+    private List<Modelo> listaModelos;
+    private ObservableList<Modelo> observableListModelos; 
     
-    public void carregarComboBoxCombustivel() {
-        cbCombustivel.setItems(FXCollections.observableArrayList( ETipoCombustivel.values()));  
+    public void carregarComboBoxModelos() {
+        listaModelos = modeloDAO.listar();
+        observableListModelos = 
+                FXCollections.observableArrayList(listaModelos);
+        cbModelo.setItems(observableListModelos);
+    }   
+    
+    private List<Cor> listaCores;
+    private ObservableList<Cor> observableListCores; 
+    
+    public void carregarComboBoxCores() {
+        listaCores = corDAO.listar();
+        observableListCores = 
+                FXCollections.observableArrayList(listaCores);
+        cbCor.setItems(observableListCores);
+    } 
+    
+    private List<Cliente> listaClientes;
+    private ObservableList<Cliente> observableListClientes; 
+    public void carregarComboBoxClientes() {
+                listaClientes = clienteDAO.listar();
+        observableListClientes = 
+                FXCollections.observableArrayList(listaClientes);
+        cbCliente.setItems(observableListClientes);
     }
     
     /**
@@ -171,32 +191,30 @@ public class FXMLAnchorPaneCadastroModeloDialogController implements Initializab
     /**
      * @return the produto
      */
-    public Modelo getModelo() {
-        return modelo;
+    public Veiculo getVeiculo() {
+        return veiculo;
     }
 
-    public void setModelo(Modelo modelo) {
-        this.modelo = modelo;
-        tfDescricao.setText(modelo.getDescricao());
-        cbCategoria.getSelectionModel().select(modelo.getCategoria());
-        cbMarca.getSelectionModel().select(modelo.getMarca());
-        
-        SpinnerValueFactory<Integer> spnFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0,1000);
-        spnFactory.setValue(modelo.getMotor().getPotencia());
-        spnPotencia.setValueFactory(spnFactory);
-        
-        cbCombustivel.getSelectionModel().select(modelo.getMotor().getTipoCombustivel());
+    /**
+     * @param produto the produto to set
+     */
+    public void setVeiculo(Veiculo veiculo) {
+        this.veiculo = veiculo;
+        tfPlaca.setText(veiculo.getPlaca());
+        tfObservacoes.setText(veiculo.getObservacoes());
+        cbModelo.getSelectionModel().select(veiculo.getModelo());
+        cbCor.getSelectionModel().select(veiculo.getCor());
+        cbCliente.getSelectionModel().select(veiculo.getCliente());
     }    
     
     @FXML
     private void handleBtConfirmar() {
         if (validarEntradaDeDados()) {
-            modelo.setDescricao(tfDescricao.getText());
-            modelo.setMarca(
-                    cbMarca.getSelectionModel().getSelectedItem());
-            modelo.setCategoria(cbCategoria.getSelectionModel().getSelectedItem());
-            modelo.getMotor().setTipoCombustivel(cbCombustivel.getSelectionModel().getSelectedItem());
-            modelo.getMotor().setPotencia(spnPotencia.getValue());
+            veiculo.setPlaca(tfPlaca.getText());
+            veiculo.setObservacoes(tfObservacoes.getText());
+            veiculo.setModelo(cbModelo.getSelectionModel().getSelectedItem());
+            veiculo.setCor(cbCor.getSelectionModel().getSelectedItem());
+            veiculo.setCliente(cbCliente.getSelectionModel().getSelectedItem());
             buttonConfirmarClicked = true;
             dialogStage.close();
         }
@@ -211,26 +229,24 @@ public class FXMLAnchorPaneCadastroModeloDialogController implements Initializab
     private boolean validarEntradaDeDados() {
         String errorMessage = "";
         
-        if (tfDescricao.getText() == null || tfDescricao.getText().isEmpty()) {
-            errorMessage += "Descrição inválida!\n";
-        }
-
-        if (cbCategoria.getSelectionModel().getSelectedItem() == null) {
-            errorMessage += "Selecione uma categoria!\n";
+        if (tfPlaca.getText() == null || tfPlaca.getText().isEmpty()) {
+            errorMessage += "Placa inválida!\n";
         }
         
-                
-        if (cbMarca.getSelectionModel().getSelectedItem() == null) {
-            errorMessage += "Selecione uma marca!\n";
+        if (tfObservacoes.getText() == null || tfObservacoes.getText().isEmpty()) {
+            errorMessage += "Observações inválidas!\n";
         }
         
-        if(spnPotencia.getValue() == 0)
-        {
-            errorMessage += "Potência de Motor inválida!\n";
+        if (cbModelo.getSelectionModel().getSelectedItem() == null) {
+            errorMessage += "Selecione um modelo!\n";
         }
         
-        if (cbCombustivel.getSelectionModel().getSelectedItem() == null) {
-            errorMessage += "Selecione um tipo de combustí­vel!\n";
+       if (cbCor.getSelectionModel().getSelectedItem() == null) {
+            errorMessage += "Selecione uma cor!\n";
+        }
+       
+        if (cbCliente.getSelectionModel().getSelectedItem() == null) {
+            errorMessage += "Selecione um cliente!\n";
         }
         
         if (errorMessage.length() == 0) {

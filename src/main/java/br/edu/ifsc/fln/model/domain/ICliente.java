@@ -21,19 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package br.edu.ifsc.fln.model.database;
-
-import java.sql.Connection;
-import java.sql.SQLException;
+package br.edu.ifsc.fln.model.domain;
 
 /**
  *
  * @author Riffen
  */
-public interface Database {
-    
-    public Connection conectar();
-    public void desconectar(Connection conn);
-    public void commit(Connection connection);
-    public void rollback(Connection connection);
+public interface ICliente {
+    public String getDados();
+    public String getDados(String observacoes);
 }

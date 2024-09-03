@@ -21,19 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package br.edu.ifsc.fln.model.database;
-
-import java.sql.Connection;
-import java.sql.SQLException;
+package br.edu.ifsc.fln.model.domain;
 
 /**
  *
  * @author Riffen
  */
-public interface Database {
+public enum EStatus {
+    ABERTA(1, "ABERTA"), FECHADA(2,"FECHADA"), CANCELADA(3,"CANCELADA");
     
-    public Connection conectar();
-    public void desconectar(Connection conn);
-    public void commit(Connection connection);
-    public void rollback(Connection connection);
+    private int id;
+    private String descricao;
+
+    private EStatus(int id, String descricao) {
+        this.id = id;
+        this.descricao = descricao;
+    }
+
+    public int getId() {
+        return id;
+    }
+    
+    public String getDescricao() {
+        return descricao;
+    }      
 }

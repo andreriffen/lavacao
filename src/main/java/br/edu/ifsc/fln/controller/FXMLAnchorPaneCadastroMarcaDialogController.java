@@ -1,3 +1,26 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2024 Riffen.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package br.edu.ifsc.fln.controller;
 
 import br.edu.ifsc.fln.model.domain.Marca;
@@ -10,7 +33,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-@SuppressWarnings("SpellCheckingInspection")
+/**
+ * FXML Controller class
+ *
+ * @author Riffen
+ */
 public class FXMLAnchorPaneCadastroMarcaDialogController implements Initializable {
 
     @FXML
@@ -25,7 +52,10 @@ public class FXMLAnchorPaneCadastroMarcaDialogController implements Initializabl
     private Stage dialogStage;
     private boolean btConfirmarClicked = false;
     private Marca marca;
-
+    
+    /**
+     * Initializes the controller class.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -55,6 +85,7 @@ public class FXMLAnchorPaneCadastroMarcaDialogController implements Initializabl
         this.marca = marca;
         this.tfNome.setText(marca.getNome());
     }
+    
 
     @FXML
     public void handleBtConfirmar() {
@@ -65,29 +96,30 @@ public class FXMLAnchorPaneCadastroMarcaDialogController implements Initializabl
             dialogStage.close();
         }
     }
-
+    
     @FXML
     public void handleBtCancelar() {
         dialogStage.close();
     }
-
+    
+    //mÈtodo para validar a entrada de dados
     private boolean validarEntradaDeDados() {
         String errorMessage = "";
-
-        if (tfNome.getText() == null || tfNome.getText().isEmpty()) {
-            errorMessage += "Nome inv√°lido!\n";
+        if (this.tfNome.getText() == null || this.tfNome.getText().length() == 0) {
+            errorMessage += "Nome inv·lido.\n";
         }
-
-        if (errorMessage.isEmpty()) {
+        
+        if (errorMessage.length() == 0) {
             return true;
         } else {
-            // Exibe uma mensagem de erro
+            //exibindo uma mensagem de erro
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erro na valida√ß√£o dos dados");
-            alert.setHeaderText("Por favor, corrija os campos inv√°lidos");
+            alert.setTitle("Erro no cadastro");
+            alert.setHeaderText("Corrija os campos inv·lidos!");
             alert.setContentText(errorMessage);
             alert.show();
             return false;
         }
     }
+    
 }
